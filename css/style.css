@@ -123,3 +123,21 @@ html, body{
     color: lightgoldenrodyellow;
     outline: 2px solid black;
 }
+
+#note_window .delete_note{
+    position: relative;
+    top: 5px;
+    left: 10px;
+    background-color: black;
+    color: lightgoldenrodyellow;
+    outline: 2px solid black;
+}
+
+#note_window .edit_note{
+    position: relative;
+    top: 5px;
+    left: 20px;
+    background-color: black;
+    color: lightgoldenrodyellow;
+    outline: 2px solid black;
+}

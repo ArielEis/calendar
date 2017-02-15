@@ -4,6 +4,8 @@
 var calender = $('#calender');
 var noteWindow = $('#note_window');
 var addNoteButton = noteWindow.find('.add_note');
+var editNoteButton = noteWindow.find('.edit_note');
+var deleteNoteButton = noteWindow.find('.delete_note');
 var monthTitle = calender.find('.title');
 var templateDay = calender.find('.template').clone();
 var container = calender.find('.container');
@@ -13,6 +15,7 @@ var currentYear;
 var targetDay = 0;
 var notes = new NoteStorage();
 var dayNotes = [];
+var noteIndex = -1;
 const hebMonth = [
     "ינואר",
     "פברואר",
@@ -50,6 +53,8 @@ function initCalender(){
 function initNoteWindow(){
     addListenerToCloseWindow();
     addListenerToAddButton();
+    addListenerToEditButton();
+    addListenerToDeleteButton();
 }
 
 
@@ -71,14 +76,20 @@ function drawCalender(){
     }
 }
 
-function drawNoteWindow(day, content, isHideButton){
+function drawNoteWindow(day, content, isNewNote){
     let dateString = day+"/"+parseInt(currentMonth+1)+ "/"+currentYear;
     dayNotes = notes.getContentOfDate(dateString);
     noteWindow.find('.note').val(content);
     noteWindow.find('.title').text(dateString);
 
-    if (isHideButton){
+    if (!isNewNote){
+        addNoteButton.show();
+        editNoteButton.hide();
+        deleteNoteButton.hide();
+    } else {
         addNoteButton.hide();
+        editNoteButton.show();
+        deleteNoteButton.show();
     }
 
     noteWindow.fadeIn(200);
@@ -99,16 +110,7 @@ function drawNewNote(day, note, i) {
     let newImg = $('<img id="img_note_'+i+'" class="img_note">');
     newImg.attr("day", day);
     note.append(newImg);
-    note.find('#img_note_'+i).click(function (event) {
-        drawNoteWindow(day, dayNotes[i], true);
-        event.stopPropagation();
-    });
-
-    note.find('#img_note_'+i).hover(function () {
-        let date = parseInt($(this).attr("day"))+"/"+
-            parseInt(currentMonth+1)+ "/"+currentYear;
-        dayNotes = notes.getContentOfDate(date);
-    });
+    addListenerToNoteImg(note.find('#img_note_'+i), day , i);
 }
 
 
@@ -149,6 +151,21 @@ function addListenerToDay(day){
     });
 }
 
+function addListenerToNoteImg(img, day, i) {
+    img.click(function (event) {
+        noteIndex = i;
+        console.log(i);
+        drawNoteWindow(day, dayNotes[i], true);
+        event.stopPropagation();
+    });
+
+    img.hover(function () {
+        let date = parseInt($(this).attr("day"))+"/"+
+            parseInt(currentMonth+1)+ "/"+currentYear;
+        dayNotes = notes.getContentOfDate(date);
+    });
+
+}
 
 function addListenerToCloseWindow() {
     noteWindow.find('.close').click(function () {
@@ -157,10 +174,30 @@ function addListenerToCloseWindow() {
 }
 
 function addListenerToAddButton() {
-    noteWindow.find('.add_note').click(function () {
+    addNoteButton.click(function () {
         let date = noteWindow.find('.title').text();
         let content = noteWindow.find('.note').val();
         notes.addNote(new Note(date, content));
+        let dateArr = date.split('/');
+        let day = container.find('#day_'+dateArr[0]);
+        redrawDay(day, date);
+        noteWindow.fadeOut(200);
+    });
+}
+
+function addListenerToEditButton(){
+    editNoteButton.click(function () {
+        let date = noteWindow.find('.title').text();
+        let content = noteWindow.find('.note').val();
+        notes.updateContentOfDate(date, noteIndex+1, content);
+        noteWindow.fadeOut(200);
+    });
+}
+
+function addListenerToDeleteButton() {
+    deleteNoteButton.click(function () {
+        let date = noteWindow.find('.title').text();
+        notes.deleteNote(date, noteIndex+1);
         let dateArr = date.split('/');
         let day = container.find('#day_'+dateArr[0]);
         redrawDay(day, date);

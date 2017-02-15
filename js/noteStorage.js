@@ -1,3 +1,5 @@
+"use strict";
+
 function NoteStorage(){
     this._storage = [];
 }
@@ -32,6 +34,35 @@ NoteStorage.prototype.getContentOfDate = function (date) {
     return content;
 };
 
+
+NoteStorage.prototype.updateContentOfDate = function(date, index, content){
+    let count = 0;
+
+    for(let i = 0; i < this._storage.length; i++){
+        if (this._storage[i]._date === date){
+            count++;
+            if (count === index){
+                this._storage[i].updateContent(content);
+                break;
+            }
+        }
+    }
+};
+
+
+NoteStorage.prototype.deleteNote = function(date, index){
+    let count = 0;
+
+    for(let i = 0; i < this._storage.length; i++){
+        if (this._storage[i]._date === date){
+            count++;
+            if (count === index){
+                this._storage.splice(i, 1);
+                break;
+            }
+        }
+    }
+};
 
 
 NoteStorage.prototype.isEarlyDate = function(dateA, dateB) {
