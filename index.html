@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calender</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+
+<div id="calender">
+    <div class="title">$$Month</div>
+    <div class="container">
+        <div class="template">
+            <span class="day">$$</span>
+            <span class="note">.</span>
+        </div>
+    </div>
+</div>
+
+<div id="note_window">
+    <div class="top"><span class="title">$$Title</span>
+        <button class="close">X</button>
+    </div>
+    <div class="content">
+        <textarea class="note"></textarea>
+    </div>
+    <div class="bottom">
+        <button class="add_note">הוסף</button>
+    </div>
+</div>
+
+
+<script src="node_modules/jquery/dist/jquery.js"></script>
+<script src="js/note.js"></script>
+<script src="js/noteStorage.js"></script>
+<script src="js/view.js"></script>
+</body>
+</html>
